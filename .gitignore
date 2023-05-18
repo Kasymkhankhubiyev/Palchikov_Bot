@@ -1,2 +1,5 @@
 /venv
 /tokens.py
+/venv/Lib
+/venv/Scripts
+__pycache__
