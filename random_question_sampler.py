@@ -71,17 +71,25 @@ def main():
     runable = True
     score = 0
     total = 0
+    idx = 1
 
     questions = pack_questions(load_questions())
     questions_num = len(questions.keys())
+    indexes = [i for i in range(1, questions_num+1, 1)]
+    random.shuffle(indexes)
 
     while runable:
-        question_id = random.randint(1, questions_num)
-        message = f'Вопрос: {questions[question_id].question}\n' +\
-                  f'1)  {questions[question_id].answer1}\n' +\
-                  f'2)  {questions[question_id].answer2}\n' +\
-                  f'3)  {questions[question_id].answer3}\n' +\
-                  f'4)  {questions[question_id].answer4}\n' + 'Введите номер ответа\nДля выхода введите "exit"\n'
+
+        if idx % questions_num == 0:
+            random.shuffle(indexes)
+            idx = 1
+        # question_id = random.randint(1, questions_num)
+
+        message = f'Вопрос: {questions[indexes[idx]].question}\n' +\
+                  f'1)  {questions[indexes[idx]].answer1}\n' +\
+                  f'2)  {questions[indexes[idx]].answer2}\n' +\
+                  f'3)  {questions[indexes[idx]].answer3}\n' +\
+                  f'4)  {questions[indexes[idx]].answer4}\n' + 'Введите номер ответа\nДля выхода введите "exit"\n'
         answer = input(message)
 
         if answer.lower() == 'exit':
@@ -90,15 +98,15 @@ def main():
             break
         
         if answer.isdigit():
-            if questions[question_id].true_answer[0] == answer:
+            if questions[indexes[idx]].true_answer[0] == answer:
                 score += 1
-                total += 1
                 print('Верный ответ!')
-                print(questions[question_id].true_answer + '\n\n')
+                print(questions[indexes[idx]].true_answer + '\n\n')
             else:
-                total += 1
                 print('Неверный ответ!')
-                print(questions[question_id].true_answer + '\n\n')
+                print(questions[indexes[idx]].true_answer + '\n\n')
+            total += 1
+            idx += 1
         else:
             print('нужно было ввести число')
             # print('Нужно ввести номер ответа - число! \n\n')
