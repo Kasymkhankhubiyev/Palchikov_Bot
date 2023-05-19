@@ -83,28 +83,28 @@ def send_question(message, score, total, questions, indexes):
         if answer in ['1', '2', '3', '4']:
             if answer == questions[indexes[total]].true_answer[0]:
                 score += 1
-                reply = 'Верный ответ!\n'
+                reply = '<b>Верный ответ!</b>\n'
             else:
-                reply = 'Неверный ответ!\n'
-            bot.send_message(message.chat.id, reply + questions[indexes[total]].true_answer)
+                reply = '<b>Неверный ответ!</b>\n'
+            bot.send_message(message.chat.id, reply + questions[indexes[total]].true_answer, parse_mode='html')
             total += 1
             if total != len(indexes):
                 question = make_question_for_bot(questions, indexes[total])
-                bot.send_message(message.chat.id, question, reply_markup=question_markup)
+                bot.send_message(message.chat.id, question, reply_markup=question_markup, parse_mode='html')
                 bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
             else:
-                reply = f'Тест окончен, вы набрали {score} из {total} = {score / total * 100} %.'
-                bot.send_message(message.chat.id, reply, reply_markup=main_markup)
+                reply = f'Тест окончен, вы набрали {score} из {total} = <b>{score / total * 100} %</b>.'
+                bot.send_message(message.chat.id, reply, reply_markup=main_markup, parse_mode='html')
                 bot.register_next_step_handler(message, next_step_handler)
         elif answer == 'закончить тест':
-            reply = f'Тест окончен, вы набрали {score} из {total} = {score / total * 100} %.'
+            reply = f'Тест окончен, вы набрали {score} из {total} = <b>{score / total * 100} %</b>.'
             bot.send_message(message.chat.id, reply, 
                         parse_mode='html', reply_markup=main_markup)
             bot.register_next_step_handler(message, next_step_handler)
         else:
             reply = 'Вы ввели что-то не то, попробуйте снова.' + make_question_for_bot(questions, indexes[total])
             question = make_question_for_bot(questions, indexes[total])
-            bot.send_message(message.chat.id, question, reply_markup=question_markup)
+            bot.send_message(message.chat.id, question, reply_markup=question_markup, parse_mode='html')
             bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
     except:
         bot.send_message(message.chat.id, 'Ладно, я устал, пойду, полежу!\nвведи "\погнали" и мы еще поболтаем.')
