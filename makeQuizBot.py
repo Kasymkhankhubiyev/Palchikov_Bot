@@ -66,7 +66,7 @@ def next_step_handler(message):
         # bot.send_message(message.chat.id, 'сейчас будет тест!')
         questions, indexes = prep_questions()
         question = make_question_for_bot(questions, indexes[total])
-        bot.send_message(message.chat.id, question, reply_markup=question_markup)
+        bot.send_message(message.chat.id, question, reply_markup=question_markup, parse_mode='html')
         bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
     elif message_text == 'цитатка':
         bot.send_message(message.chat.id, 'Вот и цитатка!')
@@ -108,6 +108,8 @@ def send_question(message, score, total, questions, indexes):
             bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
     except:
         bot.send_message(message.chat.id, 'Ладно, я устал, пойду, полежу!\nвведи "\letsgo" и мы еще поболтаем.')
+        types.ReplyKeyboardRemove()
+
 
 
 
