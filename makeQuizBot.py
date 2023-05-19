@@ -42,7 +42,7 @@ question_markup.add(btn1, btn2, btn3, btn4, btn_end_test)
 
 
 # хендлер старта
-@bot.message_handler(content_types=['text'], commands=['start', 'help', 'начать', 'помощь', 'погнали'])
+@bot.message_handler(content_types=['text'], commands=['start', 'help', 'начать', 'помощь', 'letsgo'])
 def start_help_message(message):
     bot.send_message(message.chat.id, 'Привет! Я бот <b>Батя-Пальчик</b>, выучим с тобой билеты по ФОИ!', 
                      parse_mode='html', reply_markup=main_markup)
@@ -107,7 +107,7 @@ def send_question(message, score, total, questions, indexes):
             bot.send_message(message.chat.id, question, reply_markup=question_markup, parse_mode='html')
             bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
     except:
-        bot.send_message(message.chat.id, 'Ладно, я устал, пойду, полежу!\nвведи "\погнали" и мы еще поболтаем.')
+        bot.send_message(message.chat.id, 'Ладно, я устал, пойду, полежу!\nвведи "\letsgo" и мы еще поболтаем.')
 
 
 
