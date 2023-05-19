@@ -51,19 +51,26 @@ def pack_questions(questions_data: dict) -> 'dict[int, Question]':
         
     return questions_dict
 
+def prep_questions(indexes=None):
+    if indexes is None:
+        questions = pack_questions(load_questions())
+        questions_num = len(questions.keys())
+        indexes = [i for i in range(1, questions_num+1, 1)]
+    random.shuffle(indexes)
 
-async def make_question():
-    questions = pack_questions(load_questions())
-    questions_num = len(questions.keys())
-    question_id = random.randint(1, questions_num)
-    message = f'Вопрос: {questions[question_id].question}\n' +\
+    return questions, indexes
+
+
+def make_question(questions, question_id):
+    
+    message = f'Вопрос: {questions[question_id].question}\n\n' +\
                   f'1)  {questions[question_id].answer1}\n' +\
                   f'2)  {questions[question_id].answer2}\n' +\
                   f'3)  {questions[question_id].answer3}\n' +\
                   f'4)  {questions[question_id].answer4}\n' + 'Введите номер ответа\n для выхода введите "exit".\n'
     
     # return questions[question_id], message
-    return question_id, message
+    return message
 
 
 
