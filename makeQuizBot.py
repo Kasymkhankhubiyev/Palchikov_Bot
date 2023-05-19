@@ -16,7 +16,7 @@ import telebot
 from telebot import types
 
 from tokens import token
-from random_question_sampler import make_question, Question, prep_questions
+from random_question_sampler import make_question_for_bot, Question, prep_questions
 
 
 bot = telebot.TeleBot(token)
@@ -65,7 +65,7 @@ def next_step_handler(message):
         total = 0
         # bot.send_message(message.chat.id, 'сейчас будет тест!')
         questions, indexes = prep_questions()
-        question = make_question(questions, indexes[total])
+        question = make_question_for_bot(questions, indexes[total])
         bot.send_message(message.chat.id, question, reply_markup=question_markup)
         bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
     elif message_text == 'цитатка':
@@ -89,7 +89,7 @@ def send_question(message, score, total, questions, indexes):
             bot.send_message(message.chat.id, reply + questions[indexes[total]].true_answer)
             total += 1
             if total != len(indexes):
-                question = make_question(questions, indexes[total])
+                question = make_question_for_bot(questions, indexes[total])
                 bot.send_message(message.chat.id, question, reply_markup=question_markup)
                 bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
             else:
@@ -102,8 +102,8 @@ def send_question(message, score, total, questions, indexes):
                         parse_mode='html', reply_markup=main_markup)
             bot.register_next_step_handler(message, next_step_handler)
         else:
-            reply = 'Вы ввели что-то не то, попробуйте снова.' + make_question(questions, indexes[total])
-            question = make_question(questions, indexes[total])
+            reply = 'Вы ввели что-то не то, попробуйте снова.' + make_question_for_bot(questions, indexes[total])
+            question = make_question_for_bot(questions, indexes[total])
             bot.send_message(message.chat.id, question, reply_markup=question_markup)
             bot.register_next_step_handler(message, lambda message, score=score, total=total, questions=questions, indexes=indexes: send_question(message, score, total, questions, indexes))
     except:

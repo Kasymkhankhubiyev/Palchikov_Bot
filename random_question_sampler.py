@@ -107,9 +107,9 @@ def prep_questions(indexes=None):
     return questions, indexes
 
 
-def make_question(questions, question_id) -> str:
+def make_question_for_bot(questions, question_id, console=False) -> str:
     """
-    Функция, подготавливающая текстовое представление вопроса в формате:
+    Функция, подготавливающая текстовое представление вопроса для бота в формате:
 
         'Вопрос
         
@@ -121,20 +121,23 @@ def make_question(questions, question_id) -> str:
     Аргументы:
         questions, dict[int, Question] - словарь с вопросами
         question_id, int - ключ вопроса.
+        console, bool - если True - делаем добавку в конце 
 
     Возвращаемое значение:
         message, str - вопрос в текстовом виде.
     """
     
-    message = f'Вопрос: {questions[question_id].question}\n\n' +\
+    message = f'<b>Вопрос</b>: {questions[question_id].question}\n\n' +\
                   f'1)  {questions[question_id].answer1}\n' +\
                   f'2)  {questions[question_id].answer2}\n' +\
                   f'3)  {questions[question_id].answer3}\n' +\
-                  f'4)  {questions[question_id].answer4}\n' + 'Введите номер ответа\n для выхода введите "exit".\n'
+                  f'4)  {questions[question_id].answer4}\n'
+    
+    if console:
+        message += '\nВведите номер ответа\nДля выхода введите "exit".\n'
     
     # return questions[question_id], message
     return message
-
 
 
 def main():

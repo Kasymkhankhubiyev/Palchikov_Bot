@@ -13,7 +13,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import os
 
 from tokens import token
-from random_question_sampler import make_question, Question
+from random_question_sampler import make_question_for_bot, Question
 
 
 class FSMAnswer(StatesGroup):
@@ -64,7 +64,7 @@ async def command_start_test(message: Message, state=None):
 @dp.message_handler(state=FSMAnswer.question)
 async def send_question(message: Message, state: FSMContext):
     async with state.proxy() as data:
-        question = make_question()
+        question = make_question_for_bot()
         data['question'] = question[0]
 
     await FSMAnswer.next()
