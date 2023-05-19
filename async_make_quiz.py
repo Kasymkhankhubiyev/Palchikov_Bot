@@ -1,3 +1,7 @@
+"""
+Асинхронный бот для ФОИ
+"""
+
 import json
 from aiogram import Bot
 from aiogram.types import Message, ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton

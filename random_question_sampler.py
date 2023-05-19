@@ -3,9 +3,23 @@ import io
 from typing import NamedTuple
 import random
 
+
+# файл с вопросами, вариантами ответов и правильным ответом
 quetions_json_file = 'questions.json'
 
+
 class Question(NamedTuple):
+    """
+    Дата-класс для хранения данных о вопросе.
+
+    Атрибуты:
+        question, str - текстовая запись самого вопроса в виде строки
+        answer1, str - текстовая запись первого варианта ответа в виде строки
+        answer2, str - текстовая запись второго варианта ответа в виде строки
+        answer3, str - текстовая запись третьего варианта ответа в виде строки
+        answer4, str - текстовая запись четвертого варианта ответа в виде строки
+        true_answer: str - текстовая запись верного ответа в формате: str(номер_верного_варианта: текстовое пояснение)
+    """
     question: str
     answer1: str
     answer2: str
@@ -16,7 +30,10 @@ class Question(NamedTuple):
 
 def load_questions() -> dict:
     """
-    loads json file with questions
+    Эта функция загружает данные из json файла в словарь
+
+    Возвращаемое значение:
+        questions_data, dict - словарь с данными о вопросе
     """
     with io.open(quetions_json_file, encoding='utf-8-sig', mode='r') as json_file:
         questions_data = json.load(json_file)
@@ -26,17 +43,27 @@ def load_questions() -> dict:
 
 def pack_questions(questions_data: dict) -> 'dict[int, Question]':
     """
-    {'номер вопроса':{
-        'Вопрос': 'str',
-        'Варианты ответов': {
-            '1': 'str',
-            '2': 'str',
-            '3': 'str',
-            '4': 'str'
-            },
-        'Верный ответ': 'str',
+    Функция упаковывает данные о вопросе в список из дата-классов Question
+
+    словарь с вопросами имеет вид:
+
+        {'номер вопроса':{
+            'Вопрос': 'str',
+            'Варианты ответов': {
+                '1': 'str',
+                '2': 'str',
+                '3': 'str',
+                '4': 'str'
+                },
+            'Верный ответ': 'str',
+            }
         }
-    }
+
+        Аргументы:
+            questions_data, dict - словарь с данными о вопросах.
+
+        Возвращаемое значение:
+            questions_dict, dict - словарь с вопросами в формате: {номер вопроса: дата-класс Question}
     """
     questions_dict = dict()
     keys = questions_data.keys()
@@ -52,16 +79,52 @@ def pack_questions(questions_data: dict) -> 'dict[int, Question]':
     return questions_dict
 
 def prep_questions(indexes=None):
+    """
+    функция подготавливает вопросы и рандомно перемешанный список номеров вопросов.
+
+    Аргументы:
+        indexes, list[int] - список номер вопросов, если пустой - создаем в функции.
+
+    Возвращаемое значение:
+        questions, dict[int, Question] - словарь с вопросами
+        indexes, list[int] - перемешанный список с номерами вопросов
+    """
+
+    # TODO сделать так, если index is not None - просто перемешать существуюший
     if indexes is None:
+        # получаем словарь вопросов
         questions = pack_questions(load_questions())
+
+        # получаем количество вопросов
         questions_num = len(questions.keys())
+
+        # создаем список из последовательных номеров вопросов
         indexes = [i for i in range(1, questions_num+1, 1)]
+    
+    # перемешиваем рандомно индексы
     random.shuffle(indexes)
 
     return questions, indexes
 
 
-def make_question(questions, question_id):
+def make_question(questions, question_id) -> str:
+    """
+    Функция, подготавливающая текстовое представление вопроса в формате:
+
+        'Вопрос
+        
+        Вариант 1
+        Вариант 2
+        Вариант 3
+        Вариант 4'
+
+    Аргументы:
+        questions, dict[int, Question] - словарь с вопросами
+        question_id, int - ключ вопроса.
+
+    Возвращаемое значение:
+        message, str - вопрос в текстовом виде.
+    """
     
     message = f'Вопрос: {questions[question_id].question}\n\n' +\
                   f'1)  {questions[question_id].answer1}\n' +\
@@ -75,6 +138,9 @@ def make_question(questions, question_id):
 
 
 def main():
+    """
+    Функция для запуска из консоли
+    """
     runable = True
     score = 0
     total = 0
